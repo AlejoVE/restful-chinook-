@@ -26,7 +26,24 @@ const controllers = {
     });
   },
   create: (req, res) => {
-    // read row data from body
+    const data = {
+      albumId: req.body.albumId,
+      title: req.body.title,
+      artistId: req.body.artistId,
+    };
+
+    const sql = `INSERT INTO albums VALUES (${data.albumId}, "${data.title}", ${data.artistId})`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+        data: data,
+      });
+    });
   },
   update: (req, res) => {
     // read row data from body
