@@ -27,7 +27,19 @@ const controllers = {
     });
   },
   create: (req, res) => {
-    // read row data from body
+    const name = req.body.name;
+
+    const sql = `INSERT INTO media_types (name) VALUES ("${name}")`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+      });
+    });
   },
   update: (req, res) => {
     // read row data from body
