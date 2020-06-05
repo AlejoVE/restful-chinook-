@@ -54,7 +54,17 @@ const controllers = {
       res.json(data);
     });
   },
-  delete: (req, res) => {},
+  delete: (req, res) => {
+    const id = Number(req.params.id);
+    const sql = `DELETE FROM genres WHERE genreId = ${id}`;
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.send("DELETED").end();
+    });
+  },
 };
 
 module.exports = controllers;
