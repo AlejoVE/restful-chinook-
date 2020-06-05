@@ -46,7 +46,17 @@ const controllers = {
     });
   },
   update: (req, res) => {
-    // read row data from body
+    const id = Number(req.params.id);
+    const data = req.body;
+    const sql = `UPDATE albums SET Title = "${req.body.title}", albumId = ${req.body.albumId}, artistId = ${req.body.artistId} WHERE AlbumId = ${id}`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json(data);
+    });
   },
   delete: (req, res) => {},
 };
