@@ -26,7 +26,23 @@ const controllers = {
     });
   },
   create: (req, res) => {
-    // read row data from body
+    const data = {
+      artistId: req.body.artistId,
+      name: req.body.name,
+    };
+
+    const sql = `INSERT INTO artists VALUES (${data.artistId}, "${data.name}")`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+        data: data,
+      });
+    });
   },
   update: (req, res) => {
     // read row data from body
