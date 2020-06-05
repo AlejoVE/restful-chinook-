@@ -27,12 +27,44 @@ const controllers = {
     });
   },
   create: (req, res) => {
-    // read row data from body
+    const name = req.body.name;
+
+    const sql = `INSERT INTO media_types (name) VALUES ("${name}")`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+      });
+    });
   },
   update: (req, res) => {
-    // read row data from body
+    const id = Number(req.params.id);
+    const data = req.body;
+    const sql = `UPDATE media_types SET name = "${req.body.name}" WHERE mediaTypeId = ${id}`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json(data);
+    });
   },
-  delete: (req, res) => {},
+  delete: (req, res) => {
+    const id = Number(req.params.id);
+    const sql = `DELETE FROM media_types WHERE mediaTypeId = ${id}`;
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.send("DELETED").end();
+    });
+  },
 };
 
 module.exports = controllers;
