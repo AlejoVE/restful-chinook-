@@ -1,27 +1,73 @@
-const db = require('../db-connection');
+const db = require("../db-connection");
 
 const controllers = {
   getAll: (req, res) => {
-
     const sql = `SELECT * FROM artists`;
 
     db.all(sql, (err, rows) => {
       if (err) {
-        res.status(400).json({ "error": err.message });
+        res.status(400).json({ error: err.message });
         return;
       }
 
-      res.json(rows)
+      res.json(rows);
     });
   },
-  getOne: (req, res) => { },
+  getOne: (req, res) => {
+    const sql = `SELECT * FROM artists WHERE artistId = ${req.params.id} `;
+
+    db.all(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+
+      res.json(rows);
+    });
+  },
   create: (req, res) => {
-    // read row data from body
+    const data = {
+      artistId: req.body.artistId,
+      name: req.body.name,
+    };
+
+    const sql = `INSERT INTO artists VALUES (${data.artistId}, "${data.name}")`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+        data: data,
+      });
+    });
   },
   update: (req, res) => {
-    // read row data from body
+    const id = Number(req.params.id);
+    const data = req.body;
+    const sql = `UPDATE artists SET artistId = ${req.body.artistId}, name = "${req.body.name}" WHERE artistId = ${id}`;
+
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json(data);
+    });
   },
-  delete: (req, res) => { }
-}
+  delete: (req, res) => {
+    const id = Number(req.params.id);
+    const sql = `DELETE FROM artists WHERE artistId = ${id}`;
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json([]);
+    });
+  },
+};
 
 module.exports = controllers;
