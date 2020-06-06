@@ -51,7 +51,30 @@ const controllers = {
     });
   },
   update: (req, res) => {
-    // read row data from body
+    const id = Number(req.params.id);
+    const data = {
+      name: req.body.name,
+      albumId: req.body.albumId,
+      mediaTypeId: req.body.mediaTypeId,
+      genreId: req.body.genreId,
+      composer: req.body.composer,
+      milliseconds: req.body.milliseconds,
+      bytes: req.body.bytes,
+      unitPrice: req.body.unitPrice,
+    };
+
+    const sql = `UPDATE  tracks SET name ="${data.name}", albumId = ${data.albumId}, mediaTypeId =${data.mediaTypeId}, genreId=${data.genreId} , composer = "${data.composer}", milliseconds = ${data.milliseconds}, bytes = ${data.bytes}, unitPrice = ${data.unitPrice}  WHERE trackID =${id}`;
+    console.log(sql);
+    db.run(sql, (err, rows) => {
+      if (err) {
+        res.status(400).json({ error: err.message });
+        return;
+      }
+      res.json({
+        message: "success",
+        data: data,
+      });
+    });
   },
   delete: (req, res) => {
     const id = Number(req.params.id);
